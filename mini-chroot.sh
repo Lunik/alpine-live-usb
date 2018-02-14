@@ -8,7 +8,7 @@ APK_TOOL=apk-tools-static-2.8.2-r0.apk
 
 # Root has $UID 0
 ROOT_UID=0
-if [ "$UID" != "$ROOT_UID" ]
+if [ $UID -ne $ROOT_UID ]
 then
     echo "You are not root. Please use su to become root."
 fi
