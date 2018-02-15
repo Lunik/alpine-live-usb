@@ -87,7 +87,7 @@ Démonter la partition et ejecter la carteSD
 $ umount ./alpine
 ```
 
-## Configuration d'Alpine Linux
+## Configuration d'Alpine Linux en mode sys
 Après avoir installé Alpine Linux sur la carte SD et l'avoir placé dans le raspberryPi, booter le raspebrryPi.
 Un écran sera necesaire dans un premier temps.
 
