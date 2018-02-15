@@ -54,7 +54,7 @@ $ mkfs.ext4 /dev/sdg2
 
 Il est possible de vérifier les types des partitions avec la command `cfdisk`
 
-### Installation d'Alpine
+## Installation d'Alpine
 Monter la partition 1 `/dev/sdb1` dans un repertoire courrant
 ```sh
 $ mkdir alpine
@@ -85,4 +85,92 @@ enable_uart=1
 Démonter la partition et ejecter la carteSD
 ```sh
 $ umount ./alpine
+```
+
+## Configuration d'Alpine Linux
+Après avoir installé Alpine Linux sur la carte SD et l'avoir placé dans le raspberryPi, booter le raspebrryPi.
+Un écran sera necesaire dans un premier temps.
+
+Se connecter en tant que `root`
+### Setup-alpine
+Utilisation du script préinstallé d'alpine pour faire les configurations de base
+```sh
+$ setup-alpine
+keyboard layout: fr
+variant: fr-azerty
+hostname: alpine
+initialise interface: eth0
+ip address: dhcp
+manual config: no
+password: ****
+timezone: Europe/Paris
+proxy: none
+mirror: dl-cdn.alpinelinux.org
+ssh server: openssh
+ntp client: chrony
+where to store config: none
+cache directory: /tmp/cache
+```
+
+Next update package index with `apk`:
+```sh
+$ apk update
+```
+
+Installer l'utilitaire de disque et monter le disque `/dev/mmcblk0p2`
+```sh
+$ apk add e2fsprogs
+$ mount /dev/mmcblk0p2 /mnt
+```
+
+Préparer la partition pour Alpine Linux
+```sh
+# Peut générer des erreurs (pas d'inquiétude)
+# Et c'est long...
+$ setup-disk -m sys /mnt
+$ mount -o remount,rw /dev/mmcblk0p1
+```
+
+Nettoyer les boots folders
+```sh
+$ rm -f /media/mmcblk0p1/boot/*
+$ rm /mnt/boot/boot
+```
+
+Déplacer les fichiers de boot qui viennent d'être générés
+```sh
+$ cd /mnt
+$ mv boot/* /media/mmcblk0p1/boot/
+$ rm -rf boot
+$ mkdir media/mmcblk0p1
+# Ne pas faire attention à l'erreur
+$ ln -s media/mmcblk0p1/boot boot
+```
+
+Mise à jour de la table de montage `fstab`
+Ajouter la ligne dans le fichier `/etc/fstab`
+Si une ligne commençant de la même façon existe déjà, il faut la supprimer
+```sh
+/dev/mmcblk0p1 /media/mmcblk0p1 vfat defaults 0 0
+```
+
+Supprimer toutes les lignes autres lignes inutiles. Notament `floppy` et `cdrom`
+Redémarrer
+```sh
+$ reboot
+```
+
+Si tout s'est bien passé, vérifier sur quel disque `/` a été monté avec la command `df`. Ce devrait être `/dev/mmcblk0p2`
+
+### Bonus
+#### Ajouter les dépos de la communauté.
+Dans le fichier `/etc/apk/repositories` décomenter la ligne `https://dl-cdn.../comunnity/..`
+
+#### Configurer l'heure
+Les raspberryPi n'ont pas de pile interne. Donc en cas de redémarrage, le temps doit être synchronisé avec un serveur **ntp**
+```sh
+rc-update del hwclock boot
+rc-update add swclock boot
+service hwclock stop
+service swclock start
 ```
