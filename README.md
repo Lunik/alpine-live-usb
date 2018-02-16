@@ -20,6 +20,7 @@ Identifiant de disque : 0xd8fe63fd
 - Supprimer toutes les partitions avec la touche `d` (à refaire tant qu'il en reste)
 - Lister les partitions avec `p`
 - Créer une partition avec `n`, une partition primaire `p`, de numéro `1`, premier secteur `2048`, dernier secteur `+128M`
+- Ajouter le flag bootable sur cette dernière `a`, puis `1`
 - Changer le type de cette partition avec `t`, hexcode `0E`
 - Créer une seconde partition primaire, `n`, `p`, `2` , premier secteur et dernier secteur par défaut
 
