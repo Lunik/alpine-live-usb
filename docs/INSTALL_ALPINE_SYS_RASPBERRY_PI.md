@@ -45,7 +45,7 @@ Sauvgarder les changements et quitter avec `w`
 ### Formatage des partitions
 Formater la partition 1 `/dev/sdb1` en **FAT16**
 ```sh
-$ mkfs.msdos -F 16 /dev/sdg1
+$ mkfs.vfat -F 16 /dev/sdg1
 ```
 
 Formater la partition 2 `/dev/sdb2` en **ext4**

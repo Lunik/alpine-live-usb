@@ -10,9 +10,10 @@ DEVICE=$1
 set -o xtrace
 
 function print_usage {
-    echo "USAGE:
-    $0 <INSTALL_DEVICE>
-        INSTALL_DEVICE Install alpine on this device"
+    cat << EOF
+USAGE: $0 <INSTALL_DEVICE>
+  INSTALL_DEVICE Install alpine on this device"
+EOF
 }
 
 function init {
@@ -49,51 +50,51 @@ function create_chroot_dir {
   then
       echo "$CHROOT already exists."
   else
-      mkdir -p $CHROOT
+      mkdir -p "$CHROOT"
   fi
 }
 
 function download_apk_tool {
   debug "Download apk tools"
-  wget $MIRROR/$VERSION/main/$ARCH/$APK_TOOL
+  wget "$MIRROR/$VERSION/main/$ARCH/$APK_TOOL"
   tar -xzf $APK_TOOL
 }
 
 function install_chroot {
   debug "Install alpine in chroot"
   ./sbin/apk.static \
-      -X $MIRROR/$VERSION/main \
+      -X "$MIRROR/$VERSION/main" \
       -U \
       --allow-untrusted \
-      --root ./$CHROOT \
+      --root "./$CHROOT" \
       --initdb add alpine-base alpine-sdk
 }
 
 function create_fs_arbo {
     debug "Create fs tree"
-    mkdir -p $CHROOT{/root,/etc/apk,/proc}
+    mkdir -p "$CHROOT"{/root,/etc/apk,/proc}
 }
 
 function mount_bind {
   debug "Mount bind"
-  mount --bind /proc $CHROOT/proc
-  mount --bind /dev $CHROOT/dev
+  mount --bind /proc "$CHROOT/proc"
+  mount --bind /dev "$CHROOT/dev"
 }
 
 function setup_repository {
     debug "Setup alpine repository"
-    echo "$MIRROR/$VERSION/main" >  $CHROOT/etc/apk/repositories
+    echo "$MIRROR/$VERSION/main" >  "$CHROOT/etc/apk/repositories"
 }
 
 function setup_resolv_conf {
     debug "Setup resolve.conf"
-    cp /etc/resolv.conf $CHROOT/etc/
+    cp /etc/resolv.conf "$CHROOT/etc/"
 }
 
 function cleanup_tools {
   debug "Cleanup tools"
   rm -rf sbin
-  rm -f $APK_TOOL
+  rm -f "$APK_TOOL"
 }
 
 function Main {
