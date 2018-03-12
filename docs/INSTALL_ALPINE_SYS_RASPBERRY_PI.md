@@ -36,7 +36,7 @@ Type d'étiquette de disque : dos
 Identifiant de disque : 0xd8fe63fd
 
 Périphérique Amorçage  Début         Fin      Blocs    Id. Système
-/dev/sdb1            2048      264191      131072   83  Linux
+/dev/sdb1    *       2048      264191      131072   83  Windows 16 (LBA)
 /dev/sdb2          264192    30318591    15027200   83  Linux
 ```
 
